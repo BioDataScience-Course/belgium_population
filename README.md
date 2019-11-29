@@ -6,65 +6,20 @@ Population en belgique
 ## Contexte
 
 L’office belge de statistique , Statbel, diffuse des données fiables sur
-l’économie, la société et le territoires belges.
+l’économie, la société et les territoire belges.
 
 Pour en apprendre plus sur l’office belge de statistique, vous pouvez
 consulter le lien suivant :
 <https://statbel.fgov.be/fr/propos-de-statbel>
 
 Nous souhaitons analyser l’évolution de la population belge entre le 1
-janvier 1992 et le le 1 janvier 2019.
+janvier 1992 et le 1 janvier 2019.
 
-## Attendu
-
-  - Se connecter et extraire des données de la base de données
-
-  - Créer un objet spécifique à l’analyse de données de la population
-    belge. Cet objet sera de type `belpop`
-
-  - remanier les données à l’aide de fonctions génériques
-
-  - réaliser une fonction générique pour afficher un graphique
-    spécifique au objet `belpop`
-
-  - réaliser un petit rapport qui décrit votre analyse de la population
-    belge
-
-### Utilisation de la base de données
-
-Vous devez vous connecter et extraire les tables d’intérêts afin de
-pouvoir les utiliser.
-
-    data/popu_belge_db.sqlite
-
-### Objet `belpop`
-
-Vous devez créer un objet `belpop` spécifique qui va permettre de
-réaliser des fontions générique pour remaniement des donnnées et faire
-un graphique générique.
-
-#### Remanier les données
-
-Le service de statistique propose les différents tableaux de recensement
-avec un forme similaire. On peut mettre en avant les problèmes suivant
-auxquels vous allez devoir trouver une solution :
-
-  - le nom des colonnes ne peut pas contenir de majuscule (utilisez les
-    expressions régulières pour corriger ce problème)
-  - le nom des colonnes ne peut pas contenir d’espace (utilisez les
-    expressions régulières pour corriger ce problème)
-  - le nom des colonnes ne peut pas contenir d’accent (utilisez les
-    expressions régulière pour corriger ce problème)
-  - les variables qui débutent par `Population au 01 janvier` sont des
-    variables qui recensent la population belge d’une année
-    particulière. Il faut une variable qui recense les dates et une
-    variables qui recense la population. (utilisez la fonction gather et
-    les expressions régulières pour corriger ce problème)
-
-<!-- end list -->
+Les données proposées par statbel ont une structure particulière et
+toujours la même.
 
 ``` r
-read(file = "data/bel.csv") %>.%
+read("data/bel.csv") %>.%
   knitr::kable(.)
 ```
 
@@ -74,9 +29,53 @@ read(file = "data/bel.csv") %>.%
 | Région de Bruxelles-Capitale |                        954460 |                       1068532 |                       1208542 |
 | Région wallonne              |                       3332454 |                       3475671 |                       3633795 |
 
-#### Réaliser un graphique générique
+On retrouve plusieurs colonnes de type factor qui décrivent la
+population donnée puis des variables qui recensent la densité de
+population pour des années particulières. Les différentes tables sont
+regroupé dans la base de données `popu_belge_db.sqlite`
 
-Vous devez réaliser une fonction générique plot() en R de base ou une
-fonction autoplot() en ggplot
+Il faut donc créer un objet de class `belpop` qui va remanier les
+données afin d’avoir un tableau similaire au tableau ci-dessous.
 
-### Raport d’analyse
+``` r
+read("data/bel_lg.csv") %>.%
+  knitr::kable(.)
+```
+
+| region                       | year | population |
+| :--------------------------- | ---: | ---------: |
+| Région flamande              | 1999 |    5926838 |
+| Région de Bruxelles-Capitale | 1999 |     954460 |
+| Région wallonne              | 1999 |    3332454 |
+| Région flamande              | 2009 |    6208877 |
+| Région de Bruxelles-Capitale | 2009 |    1068532 |
+| Région wallonne              | 2009 |    3475671 |
+| Région flamande              | 2019 |    6589069 |
+| Région de Bruxelles-Capitale | 2019 |    1208542 |
+| Région wallonne              | 2019 |    3633795 |
+
+Afin de faciliter l’analyse rapide des données, il vous est demandé de
+faire une fonction générique de type plot() ou autoplot() similaire au
+graphique ci-dessous pour aider les analystes de la plateforme statbel.
+
+![](images/graph.png)
+
+## Attendu
+
+  - Se connecter et extraire des données de la base de données
+
+  - Créer un objet spécifique à l’analyse de données de la population
+    belge. Cet objet sera de classe `belpop`
+
+  - Remanier les données à l’aide de fonctions
+
+  - Réaliser une fonction générique pour afficher un graphique
+    spécifique au objet `belpop`
+
+  - Réaliser un petit rapport qui décrit votre analyse de la population
+    belge se basant sur une question de votre choix. Tous les tableaux
+    et graphiques doivent être légendés.
+
+  - Documenter toutes les fonctions en lien avec l’objet belpop
+
+  - Modulariser votre code
